@@ -1,4 +1,4 @@
-setwd("C:/data") # working directory
+setwd("C:/data") # working directory 
 my_rawdata = read.csv(file = "final.csv", header=TRUE, na.string="?")
 set.seed(2) # seed=2
 my_rawdata <my_rawdata[sample(nrow(my_rawdata)),]
