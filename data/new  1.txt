@@ -1,0 +1,46 @@
+useful <- list(bag_o_words( my_cor[[1]], apostrophe.remove = TRUE))
+for (i in 2:25000)
+ {y=gsub("[^[:alnum:] ]", "",my_cor[[i]] )   
+  z=bag_o_words(y , apostrophe.remove = TRUE)
+  useful=append( useful,list(z))
+} 
+
+useful <- list()
+for (i in 1:25000)
+{ 
+  y=gsub("[^[:alnum:] ]", "",my_cor[[i]] )   
+  z=bag_o_words(y , apostrophe.remove = TRUE)
+  z.vector=unlist(z)
+  sorted_b<-sort(table(z.vector), decreasing=TRUE)
+   w=sorted_b[1:100]
+  useful=append( useful,list(w))
+} 
+library(randomForest)
+my_rf_train<- randomForest( sentiment~ ., data=useful, ntree= 100 )   
+# my_rf_predict<-predict(my_rf_train, testing_data, type="response")
+
+
+
+output <- matrix(unlist(names(useful[[1]])), ncol=100, byrow=TRUE)
+for(i in 2:25)
+{ if ( is.null(names(useful[[i]] ))) 
+       {    output1 <- matrix(c("a"), ncol=100, byrow=TRUE)}   
+  else { output1 <- matrix(unlist(names(useful[[i]])), ncol=100, byrow=TRUE) }
+  output=rbind(output,output1)
+  print(i)
+}
+
+
+for (i in 1:250)
+{ 
+  y=gsub("[^[:alnum:] ]", "",my_cor[[i]] )   
+  z=bag_o_words(y , apostrophe.remove = TRUE)
+  x.vector=unlist(z)
+  sorted_b<-sort(table(x.vector), decreasing=TRUE)
+   w=sorted_b[1:50]
+  if ( is.null(names(w))) 
+       { k1= matrix(c("a", train$sentiment[i]),nrow=1, ncol=51, byrow=TRUE) }   
+   else { k1=matrix(c(names(w), train$sentiment[i]), nrow=1,ncol=51, byrow=TRUE) }
+   k=rbind(k,k1)
+   print(i)
+} 
